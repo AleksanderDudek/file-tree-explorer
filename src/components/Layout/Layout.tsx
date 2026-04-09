@@ -1,6 +1,8 @@
 import { type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTree } from '../../context/TreeContext'
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher'
 
 interface LayoutProps {
   readonly children: ReactNode
@@ -9,6 +11,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const { tree, setTree } = useTree()
   const { pathname } = useLocation()
+  const { t } = useTranslation()
   const isHome = pathname === '/'
 
   return (
@@ -33,26 +36,27 @@ export default function Layout({ children }: LayoutProps) {
               </svg>
             </div>
             <span className="text-sm font-semibold tracking-tight text-gray-300 group-hover:text-white transition-colors duration-200">
-              FileTree Explorer
+              {t('layout.title')}
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-2">
+            <LanguageSwitcher />
             {tree && !isHome && (
               <Link
                 to="/tree"
                 className="text-xs font-medium text-gray-500 hover:text-gray-200 px-3 py-1.5 rounded-lg hover:bg-white/[0.06] transition-all duration-150"
               >
-                View Tree
+                {t('layout.viewTree')}
               </Link>
             )}
             {tree && (
               <button
                 onClick={() => setTree(null)}
                 className="text-xs font-medium text-gray-600 hover:text-red-400 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition-all duration-150"
-                title="Clear loaded tree"
+                title={t('layout.clearTreeTitle')}
               >
-                Clear
+                {t('layout.clearTree')}
               </button>
             )}
           </nav>

@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTree } from '../../context/TreeContext'
 import { findNodeByPath, getTotalSize, sortNodes } from '../../utils/treeUtils'
 import { formatSize } from '../../utils/formatters'
@@ -34,6 +35,7 @@ export default function NodeDetail() {
 }
 
 function FileDetail({ node, path }: { readonly node: Extract<TreeNode, { type: 'file' }>; readonly path: string }) {
+  const { t } = useTranslation()
   return (
     <div className="card overflow-hidden">
       <div className="px-5 py-4 border-b border-white/[0.06] flex items-center gap-3">
@@ -45,20 +47,21 @@ function FileDetail({ node, path }: { readonly node: Extract<TreeNode, { type: '
         </div>
         <h1 className="text-base font-semibold text-gray-100 break-all flex-1">{node.name}</h1>
         <span className="text-[11px] font-medium text-blue-400/80 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
-          file
+          {t('nodeDetail.typeBadge.file')}
         </span>
       </div>
 
       <dl>
-        <DetailRow label="Name"      value={node.name} />
-        <DetailRow label="Size"      value={formatSize(node.size)} />
-        <DetailRow label="Full path" value={path} mono />
+        <DetailRow label={t('nodeDetail.label.name')}     value={node.name} />
+        <DetailRow label={t('nodeDetail.label.size')}     value={formatSize(node.size)} />
+        <DetailRow label={t('nodeDetail.label.fullPath')} value={path} mono />
       </dl>
     </div>
   )
 }
 
 function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type: 'folder' }>; readonly path: string }) {
+  const { t } = useTranslation()
   const totalSize = getTotalSize(node)
 
   return (
@@ -72,22 +75,22 @@ function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type:
           </div>
           <h1 className="text-base font-semibold text-gray-100 break-all flex-1">{node.name}</h1>
           <span className="text-[11px] font-medium text-amber-400/80 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
-            folder
+            {t('nodeDetail.typeBadge.folder')}
           </span>
         </div>
 
         <dl>
-          <DetailRow label="Name"            value={node.name} />
-          <DetailRow label="Direct children" value={String(node.children.length)} />
-          <DetailRow label="Total size"      value={formatSize(totalSize)} />
-          <DetailRow label="Full path"       value={path} mono />
+          <DetailRow label={t('nodeDetail.label.name')}           value={node.name} />
+          <DetailRow label={t('nodeDetail.label.directChildren')} value={String(node.children.length)} />
+          <DetailRow label={t('nodeDetail.label.totalSize')}      value={formatSize(totalSize)} />
+          <DetailRow label={t('nodeDetail.label.fullPath')}       value={path} mono />
         </dl>
       </div>
 
       {node.children.length > 0 && (
         <div className="card overflow-hidden">
           <div className="px-5 py-3 border-b border-white/[0.06]">
-            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Contents</h2>
+            <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t('nodeDetail.contents')}</h2>
           </div>
           <ul>
             {node.children
@@ -121,7 +124,7 @@ function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type:
                       )}
                       {child.type === 'folder' && (
                         <span className="text-[11px] text-gray-700">
-                          {child.children.length} item{child.children.length === 1 ? '' : 's'}
+                          {t('nodeDetail.items', { count: child.children.length })}
                         </span>
                       )}
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gray-700 group-hover:text-gray-500 transition-colors shrink-0">
@@ -150,6 +153,7 @@ function DetailRow({ label, value, mono = false }: { readonly label: string; rea
 }
 
 function NotFound({ path }: { readonly path: string }) {
+  const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center pt-20 text-center animate-fade-in">
       <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] mb-5">
@@ -159,13 +163,13 @@ function NotFound({ path }: { readonly path: string }) {
           <line x1="12" y1="16" x2="12.01" y2="16" />
         </svg>
       </div>
-      <p className="text-gray-400 font-medium mb-1">Node not found</p>
+      <p className="text-gray-400 font-medium mb-1">{t('nodeDetail.notFound')}</p>
       {path && <p className="text-xs text-gray-700 font-mono mb-5 max-w-xs truncate">{path}</p>}
       <Link
         to="/tree"
         className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
       >
-        ← Back to tree
+        {t('nodeDetail.backToTree')}
       </Link>
     </div>
   )

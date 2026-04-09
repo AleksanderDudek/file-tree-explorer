@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTree } from '../../context/TreeContext'
 import Layout from '../../components/Layout/Layout'
 import { EXAMPLES } from './Home.consts'
-import { parseAndValidateTree, readFileAsText } from './Home.service'
+import { parseAndValidateTree, readFileAsText, TreeParseError } from './Home.service'
 
 export default function Home() {
   const { tree, setTree } = useTree()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [jsonInput, setJsonInput] = useState('')
   const [error, setError] = useState<string | null>(null)
 
@@ -15,7 +17,7 @@ export default function Home() {
     setError(null)
     const trimmed = jsonInput.trim()
     if (!trimmed) {
-      setError('Please paste or upload a JSON file.')
+      setError(t('home.error.emptyInput'))
       return
     }
     try {
@@ -23,7 +25,11 @@ export default function Home() {
       setTree(parsed)
       navigate('/tree')
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'An unexpected error occurred.')
+      if (e instanceof TreeParseError) {
+        setError(t(`home.error.${e.code}`))
+      } else {
+        setError(t('home.error.unexpected'))
+      }
     }
   }
 
@@ -36,7 +42,7 @@ export default function Home() {
       setJsonInput(text)
       setError(null)
     } catch {
-      setError('Failed to read file.')
+      setError(t('home.error.fileRead'))
     }
   }
 
@@ -50,14 +56,14 @@ export default function Home() {
 
           <div className="inline-flex items-center gap-2 text-xs font-medium text-blue-400/90 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1 mb-5">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse-slow" />{' '}
-            JSON-powered file tree explorer
+            {t('home.badge')}
           </div>
 
           <h1 className="text-gradient text-4xl font-bold tracking-tight mb-3">
-            FileTree Explorer
+            {t('home.title')}
           </h1>
-          <p className="text-gray-500 text-[15px] leading-relaxed">
-            Paste or upload a JSON file to visualize<br />your directory structure
+          <p className="text-gray-500 text-[15px] leading-relaxed whitespace-pre-line">
+            {t('home.subtitle')}
           </p>
         </div>
 
@@ -69,12 +75,12 @@ export default function Home() {
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
-            <p className="text-sm text-emerald-300/90 flex-1">A tree is already loaded.</p>
+            <p className="text-sm text-emerald-300/90 flex-1">{t('home.treeLoaded')}</p>
             <Link
               to="/tree"
               className="text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
             >
-              View it →
+              {t('home.viewIt')}
             </Link>
           </div>
         )}
@@ -83,7 +89,7 @@ export default function Home() {
         <div className="card p-6 space-y-4">
           <div className="flex items-center justify-between">
             <label htmlFor="json-input" className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              JSON Input
+              {t('home.jsonInput.label')}
             </label>
             <select
               defaultValue=""
@@ -96,9 +102,9 @@ export default function Home() {
                 e.target.value = ''
               }}
               className="text-xs bg-transparent text-blue-400 hover:text-blue-300 cursor-pointer focus:outline-none transition-colors"
-              aria-label="Load example"
+              aria-label={t('home.loadExample')}
             >
-              <option value="" disabled>Load example…</option>
+              <option value="" disabled>{t('home.loadExample')}</option>
               {EXAMPLES.map((ex, i) => (
                 <option key={ex.name} value={i}>
                   {ex.name} — {ex.description}
@@ -117,7 +123,7 @@ export default function Home() {
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleLoad()
             }}
-            placeholder={`{\n  "name": "root",\n  "type": "folder",\n  "children": []\n}`}
+            placeholder={t('home.jsonInput.placeholder')}
             rows={14}
             spellCheck={false}
             className="input-field w-full p-3.5 text-sm font-mono resize-y leading-relaxed"
@@ -141,10 +147,10 @@ export default function Home() {
               disabled={!jsonInput.trim()}
               className="btn-primary flex-1 py-2.5 px-4 text-sm"
             >
-              Visualize Tree
+              {t('home.visualizeTree')}
             </button>
             <label className="btn-secondary py-2.5 px-4 text-sm whitespace-nowrap cursor-pointer">
-              Upload JSON{' '}
+              {t('home.uploadJson')}{' '}
               <input
                 type="file"
                 accept=".json,application/json"
@@ -158,7 +164,7 @@ export default function Home() {
         {/* ── Format hint ──────────────────────────────── */}
         <div className="mt-4 px-4 py-3.5 rounded-xl border border-white/[0.05] bg-white/[0.02]">
           <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest mb-2">
-            Expected format
+            {t('home.expectedFormat')}
           </p>
           <pre className="text-xs text-gray-600 font-mono leading-relaxed overflow-x-auto">
             {`{ "name": "root", "type": "folder", "children": [\n    { "name": "app.ts", "type": "file", "size": 2048 }\n  ]\n}`}

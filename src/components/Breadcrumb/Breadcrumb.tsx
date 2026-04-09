@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 interface BreadcrumbProps {
   readonly pathParts: string[]
 }
 
 export default function Breadcrumb({ pathParts }: BreadcrumbProps) {
+  const { t } = useTranslation()
+
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-0.5 flex-wrap">
+    <nav aria-label={t('breadcrumb.ariaLabel')} className="flex items-center gap-0.5 flex-wrap">
       {pathParts.map((part, index) => {
         const isLast = index === pathParts.length - 1
         const href = `/tree/${pathParts.slice(0, index + 1).join('/')}`

@@ -4,7 +4,7 @@ import { createElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { TreeProvider } from '../../context/TreeContext'
 import Home from './Home'
-import { parseAndValidateTree } from './Home.service'
+import { parseAndValidateTree, TreeParseError } from './Home.service'
 
 function renderHome() {
   return render(
@@ -72,7 +72,7 @@ describe('Home.service', () => {
     })
 
     it('throws on structurally invalid tree', () => {
-      expect(() => parseAndValidateTree('{"name":"x","type":"unknown"}')).toThrow(/invalid tree/i)
+      expect(() => parseAndValidateTree('{"name":"x","type":"unknown"}')).toThrow(TreeParseError)
     })
   })
 

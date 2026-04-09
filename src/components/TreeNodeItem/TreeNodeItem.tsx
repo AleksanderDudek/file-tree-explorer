@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { TreeNode } from '../../types/tree'
 import { sortNodes } from '../../utils/treeUtils'
 import { GUIDE_INDENT_PX } from './TreeNodeItem.consts'
@@ -13,6 +14,7 @@ interface TreeNodeItemProps {
 export default function TreeNodeItem({ node, path, depth }: TreeNodeItemProps) {
   const [isExpanded, setIsExpanded] = useState(depth < 2)
   const { pathname } = useLocation()
+  const { t } = useTranslation()
   const isActive = pathname === `/tree/${path}`
 
   const activeClass = 'bg-blue-500/12 text-blue-300 shadow-[inset_2px_0_0_rgba(96,165,250,0.55)]'
@@ -36,7 +38,7 @@ export default function TreeNodeItem({ node, path, depth }: TreeNodeItemProps) {
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
           className="p-0.5 rounded-sm hover:bg-white/10 shrink-0 text-gray-600 hover:text-gray-300 transition-colors duration-100"
-          aria-label={isExpanded ? 'Collapse folder' : 'Expand folder'}
+          aria-label={isExpanded ? t('treeNode.collapseFolder') : t('treeNode.expandFolder')}
         >
           <svg
             width="10"
@@ -64,7 +66,7 @@ export default function TreeNodeItem({ node, path, depth }: TreeNodeItemProps) {
         >
           {node.children.length === 0 ? (
             <div className="py-1 pl-3 text-[11px] text-gray-700 italic">
-              empty folder
+              {t('treeNode.emptyFolder')}
             </div>
           ) : (
             node.children

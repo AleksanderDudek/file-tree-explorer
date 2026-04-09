@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useTree } from '../../context/TreeContext'
 import { searchNodes } from '../../utils/treeUtils'
 import TreeNodeItem from '../TreeNodeItem/TreeNodeItem'
@@ -7,6 +8,7 @@ import type { SearchResult } from '../../types/tree'
 export default function TreeSidebar() {
   const { tree } = useTree()
   const [searchParams, setSearchParams] = useSearchParams()
+  const { t } = useTranslation()
   const query = searchParams.get('q') ?? ''
 
   if (!tree) return null
@@ -48,14 +50,14 @@ export default function TreeSidebar() {
               type="text"
               value={query}
               onChange={(e) => handleSearch(e.target.value)}
-              placeholder="Search…"
+              placeholder={t('sidebar.searchPlaceholder')}
               className="input-field w-full py-1.5 pl-7 pr-8 text-[13px]"
             />
             {query && (
               <button
                 onClick={() => handleSearch('')}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition-colors"
-                aria-label="Clear search"
+                aria-label={t('sidebar.clearSearch')}
               >
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                   <line x1="18" y1="6" x2="6" y2="18" />
@@ -81,6 +83,8 @@ export default function TreeSidebar() {
 }
 
 function SearchResults({ results, query }: { readonly results: SearchResult[]; readonly query: string }) {
+  const { t } = useTranslation()
+
   if (results.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -88,7 +92,7 @@ function SearchResults({ results, query }: { readonly results: SearchResult[]; r
           <circle cx="11" cy="11" r="8" />
           <path d="m21 21-4.35-4.35" />
         </svg>
-        <p className="text-xs text-gray-600">No results for &ldquo;{query}&rdquo;</p>
+        <p className="text-xs text-gray-600">{t('sidebar.noResults', { query })}</p>
       </div>
     )
   }
@@ -96,7 +100,7 @@ function SearchResults({ results, query }: { readonly results: SearchResult[]; r
   return (
     <div className="space-y-0.5">
       <p className="text-[10px] font-semibold text-gray-700 uppercase tracking-wider px-2 py-1">
-        {results.length} result{results.length === 1 ? '' : 's'}
+        {t('sidebar.results', { count: results.length })}
       </p>
       {results.map((result) => (
         <Link

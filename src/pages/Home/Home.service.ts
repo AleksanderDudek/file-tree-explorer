@@ -1,6 +1,14 @@
 import type { TreeNode } from '../../types/tree'
 import { validateTreeNode } from '../../utils/treeUtils'
 
+export type ParseErrorCode = 'invalidJson' | 'invalidStructure'
+
+export class TreeParseError extends Error {
+  constructor(public readonly code: ParseErrorCode) {
+    super(code)
+  }
+}
+
 export function readFileAsText(file: File): Promise<string> {
   return file.text()
 }
@@ -10,12 +18,10 @@ export function parseAndValidateTree(json: string): TreeNode {
   try {
     parsed = JSON.parse(json)
   } catch {
-    throw new Error('Invalid JSON — please check for syntax errors.')
+    throw new TreeParseError('invalidJson')
   }
   if (!validateTreeNode(parsed)) {
-    throw new Error(
-      'Invalid tree structure. Each node needs a "name" and "type" ("file" or "folder"). Files need "size", folders need "children".',
-    )
+    throw new TreeParseError('invalidStructure')
   }
   return parsed
 }
