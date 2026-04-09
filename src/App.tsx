@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { TreeProvider } from './context/TreeContext'
-import Home from './pages/Home'
-import TreeLayout from './pages/TreeLayout'
-import NodeDetail from './pages/NodeDetail'
+import Home from './pages/Home/Home'
+import TreeLayout from './pages/TreeLayout/TreeLayout'
+import NodeDetail from './pages/NodeDetail/NodeDetail'
 
 export default function App() {
   return (

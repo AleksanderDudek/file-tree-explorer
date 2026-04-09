@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import type { TreeNode } from '../types/tree'
+import type { TreeNode } from '../../types/tree'
+import { sortNodes } from '../../utils/treeUtils'
+import { INDENT_PX } from './TreeNodeItem.consts'
 
 interface TreeNodeItemProps {
   node: TreeNode
   path: string
   depth: number
 }
-
-const INDENT_PX = 14
 
 export default function TreeNodeItem({ node, path, depth }: TreeNodeItemProps) {
   const [isExpanded, setIsExpanded] = useState(depth < 2)
@@ -97,12 +97,6 @@ export default function TreeNodeItem({ node, path, depth }: TreeNodeItemProps) {
       )}
     </div>
   )
-}
-
-/** Folders first, then files — each group sorted alphabetically */
-function sortNodes(a: TreeNode, b: TreeNode): number {
-  if (a.type !== b.type) return a.type === 'folder' ? -1 : 1
-  return a.name.localeCompare(b.name)
 }
 
 function FileIcon() {

@@ -1,9 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
-import { useTree } from '../context/TreeContext'
-import { findNodeByPath, getTotalSize } from '../utils/treeUtils'
-import { formatSize } from '../utils/formatters'
-import Breadcrumb from '../components/Breadcrumb'
-import type { TreeNode } from '../types/tree'
+import { useTree } from '../../context/TreeContext'
+import { findNodeByPath, getTotalSize, sortNodes } from '../../utils/treeUtils'
+import { formatSize } from '../../utils/formatters'
+import Breadcrumb from '../../components/Breadcrumb/Breadcrumb'
+import type { TreeNode } from '../../types/tree'
 
 export default function NodeDetail() {
   const { tree } = useTree()
@@ -219,9 +219,4 @@ function NotFound({ path }: { path: string }) {
       </Link>
     </div>
   )
-}
-
-function sortNodes(a: TreeNode, b: TreeNode): number {
-  if (a.type !== b.type) return a.type === 'folder' ? -1 : 1
-  return a.name.localeCompare(b.name)
 }

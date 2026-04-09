@@ -1,8 +1,8 @@
 import { Link, useSearchParams } from 'react-router-dom'
-import { useTree } from '../context/TreeContext'
-import { searchNodes } from '../utils/treeUtils'
-import TreeNodeItem from './TreeNodeItem'
-import type { SearchResult } from '../types/tree'
+import { useTree } from '../../context/TreeContext'
+import { searchNodes } from '../../utils/treeUtils'
+import TreeNodeItem from '../TreeNodeItem/TreeNodeItem'
+import type { SearchResult } from '../../types/tree'
 
 export default function TreeSidebar() {
   const { tree } = useTree()

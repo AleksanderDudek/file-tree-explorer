@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useTree } from '../context/TreeContext'
+import { useTree } from '../../context/TreeContext'
 
 interface LayoutProps {
   children: ReactNode

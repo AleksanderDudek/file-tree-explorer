@@ -44,6 +44,14 @@ export function searchNodes(
 }
 
 /**
+ * Sorts nodes with folders first, then alphabetically within each group.
+ */
+export function sortNodes(a: TreeNode, b: TreeNode): number {
+  if (a.type !== b.type) return a.type === 'folder' ? -1 : 1
+  return a.name.localeCompare(b.name)
+}
+
+/**
  * Returns the total size of all files in a subtree.
  */
 export function getTotalSize(node: TreeNode): number {

@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useTree } from '../context/TreeContext'
-import Layout from '../components/Layout'
-import TreeSidebar from '../components/TreeSidebar'
+import { useTree } from '../../context/TreeContext'
+import Layout from '../../components/Layout/Layout'
+import TreeSidebar from '../../components/TreeSidebar/TreeSidebar'
 
 export default function TreeLayout() {
   const { tree } = useTree()

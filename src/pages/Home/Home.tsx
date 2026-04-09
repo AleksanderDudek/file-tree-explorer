@@ -1,32 +1,9 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { useTree } from '../context/TreeContext'
-import { validateTreeNode } from '../utils/treeUtils'
-import Layout from '../components/Layout'
-
-const EXAMPLE_JSON = JSON.stringify(
-  {
-    name: 'root',
-    type: 'folder',
-    children: [
-      {
-        name: 'src',
-        type: 'folder',
-        children: [
-          { name: 'index.ts', type: 'file', size: 1024 },
-          {
-            name: 'components',
-            type: 'folder',
-            children: [{ name: 'Button.tsx', type: 'file', size: 512 }],
-          },
-        ],
-      },
-      { name: 'package.json', type: 'file', size: 300 },
-    ],
-  },
-  null,
-  2,
-)
+import { useTree } from '../../context/TreeContext'
+import Layout from '../../components/Layout/Layout'
+import { EXAMPLE_JSON } from './Home.consts'
+import { parseAndValidateTree, readFileAsText } from './Home.service'
 
 export default function Home() {
   const { tree, setTree } = useTree()
@@ -42,33 +19,25 @@ export default function Home() {
       return
     }
     try {
-      const parsed: unknown = JSON.parse(trimmed)
-      if (!validateTreeNode(parsed)) {
-        setError(
-          'Invalid tree structure. Each node needs a "name" and "type" ("file" or "folder"). Files need "size", folders need "children".',
-        )
-        return
-      }
+      const parsed = parseAndValidateTree(trimmed)
       setTree(parsed)
       navigate('/tree')
-    } catch {
-      setError('Invalid JSON — please check for syntax errors.')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'An unexpected error occurred.')
     }
   }
 
-  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const text = event.target?.result
-      if (typeof text === 'string') {
-        setJsonInput(text)
-        setError(null)
-      }
-    }
-    reader.readAsText(file)
     e.target.value = ''
+    try {
+      const text = await readFileAsText(file)
+      setJsonInput(text)
+      setError(null)
+    } catch {
+      setError('Failed to read file.')
+    }
   }
 
   return (
