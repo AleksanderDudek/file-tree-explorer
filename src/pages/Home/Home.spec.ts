@@ -22,9 +22,9 @@ describe('Home', () => {
     expect(screen.getByRole('textbox')).toBeInTheDocument()
   })
 
-  it('renders the Load example button', () => {
+  it('renders the Load example select', () => {
     renderHome()
-    expect(screen.getByRole('button', { name: /load example/i })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: /load example/i })).toBeInTheDocument()
   })
 
   it('disables Visualize Tree button when input is empty', () => {
@@ -45,11 +45,13 @@ describe('Home', () => {
     expect(screen.getByText(/invalid json/i)).toBeInTheDocument()
   })
 
-  it('loads example JSON into textarea', () => {
+  it('loads selected example JSON into textarea', () => {
     renderHome()
-    fireEvent.click(screen.getByRole('button', { name: /load example/i }))
+    fireEvent.change(screen.getByRole('combobox', { name: /load example/i }), {
+      target: { value: '0' },
+    })
     const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
-    expect(textarea.value).toContain('"name": "root"')
+    expect(textarea.value).toContain('"name": "my-react-app"')
   })
 })
 

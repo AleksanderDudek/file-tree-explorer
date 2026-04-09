@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTree } from '../../context/TreeContext'
 import Layout from '../../components/Layout/Layout'
-import { EXAMPLE_JSON } from './Home.consts'
+import { EXAMPLES } from './Home.consts'
 import { parseAndValidateTree, readFileAsText } from './Home.service'
 
 export default function Home() {
@@ -86,16 +86,26 @@ export default function Home() {
             >
               JSON Input
             </label>
-            <button
-              type="button"
-              onClick={() => {
-                setJsonInput(EXAMPLE_JSON)
-                setError(null)
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const idx = Number.parseInt(e.target.value)
+                if (!Number.isNaN(idx)) {
+                  setJsonInput(EXAMPLES[idx].json)
+                  setError(null)
+                }
+                e.target.value = ''
               }}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-xs bg-transparent text-blue-400 hover:text-blue-300 cursor-pointer focus:outline-none"
+              aria-label="Load example"
             >
-              Load example
-            </button>
+              <option value="" disabled>Load example…</option>
+              {EXAMPLES.map((ex, i) => (
+                <option key={ex.name} value={i}>
+                  {ex.name} — {ex.description}
+                </option>
+              ))}
+            </select>
           </div>
 
           <textarea
