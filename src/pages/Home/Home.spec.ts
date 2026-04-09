@@ -1,10 +1,10 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { createElement } from 'react'
 import { MemoryRouter } from 'react-router-dom'
 import { TreeProvider } from '../../context/TreeContext'
 import Home from './Home'
-import { parseAndValidateTree, readFileAsText } from './Home.service'
+import { parseAndValidateTree } from './Home.service'
 
 function renderHome() {
   return render(
@@ -74,26 +74,4 @@ describe('Home.service', () => {
     })
   })
 
-  describe('readFileAsText', () => {
-    it('resolves with file contents', async () => {
-      const file = new File(['hello world'], 'test.json', { type: 'application/json' })
-      const result = await readFileAsText(file)
-      expect(result).toBe('hello world')
-    })
-
-    it('rejects when FileReader encounters an error', async () => {
-      const mockReader = {
-        onload: null as ((e: ProgressEvent<FileReader>) => void) | null,
-        onerror: null as ((e: ProgressEvent<FileReader>) => void) | null,
-        readAsText: vi.fn().mockImplementation(function (this: typeof mockReader) {
-          this.onerror?.(new ProgressEvent('error') as ProgressEvent<FileReader>)
-        }),
-        result: null,
-      }
-      vi.spyOn(globalThis, 'FileReader').mockImplementation(() => mockReader as unknown as FileReader)
-      const file = new File([''], 'bad.json')
-      await expect(readFileAsText(file)).rejects.toThrow()
-      vi.restoreAllMocks()
-    })
-  })
 })

@@ -44,8 +44,9 @@ describe('TreeNodeItem', () => {
 
   it('collapses folder on second button click', () => {
     renderNode(folderNode, 'root/src', 0)
-    const button = screen.getByRole('button')
-    fireEvent.click(button)
+    // depth=0 auto-expands, so child folders also render buttons — target the first (root)
+    const [rootButton] = screen.getAllByRole('button')
+    fireEvent.click(rootButton)
     expect(screen.queryByText('z-file.ts')).not.toBeInTheDocument()
   })
 

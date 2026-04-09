@@ -42,7 +42,8 @@ describe('NodeDetail', () => {
 
   it('renders file detail for a known file path', () => {
     renderAtPath('/tree/root/index.ts', true)
-    expect(screen.getByText('index.ts')).toBeInTheDocument()
+    // 'index.ts' appears in breadcrumb, h1, and detail row — assert on the heading specifically
+    expect(screen.getByRole('heading', { name: 'index.ts' })).toBeInTheDocument()
     expect(screen.getByText('file')).toBeInTheDocument()
   })
 
