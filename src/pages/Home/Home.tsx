@@ -42,48 +42,47 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-100 mb-2">
+      <div className="max-w-xl mx-auto">
+
+        {/* ── Hero ─────────────────────────────────────── */}
+        <div className="mb-10 text-center relative">
+          <div className="bg-hero-glow absolute inset-x-0 -top-16 h-80 pointer-events-none" />
+
+          <div className="inline-flex items-center gap-2 text-xs font-medium text-blue-400/90 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1 mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse-slow" />{' '}
+            JSON-powered file tree explorer
+          </div>
+
+          <h1 className="text-gradient text-4xl font-bold tracking-tight mb-3">
             FileTree Explorer
           </h1>
-          <p className="text-gray-400">
-            Paste or upload a JSON file to visualize your directory structure
+          <p className="text-gray-500 text-[15px] leading-relaxed">
+            Paste or upload a JSON file to visualize<br />your directory structure
           </p>
         </div>
 
-        {/* Already have a tree loaded */}
+        {/* ── Tree already loaded banner ────────────────── */}
         {tree && (
-          <div className="mb-4 flex items-center gap-3 p-3 bg-green-900/20 border border-green-800/50 rounded-lg">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="text-green-400 shrink-0"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <p className="text-sm text-green-300 flex-1">
-              A tree is already loaded.
-            </p>
+          <div className="mb-5 flex items-center gap-3 px-4 py-3 bg-emerald-500/8 border border-emerald-500/20 rounded-xl animate-fade-in">
+            <div className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-emerald-400">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <p className="text-sm text-emerald-300/90 flex-1">A tree is already loaded.</p>
             <Link
               to="/tree"
-              className="text-sm text-green-400 hover:text-green-300 underline transition-colors"
+              className="text-sm font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
             >
               View it →
             </Link>
           </div>
         )}
 
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-4">
+        {/* ── Main card ────────────────────────────────── */}
+        <div className="card p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <label
-              htmlFor="json-input"
-              className="text-sm font-medium text-gray-300"
-            >
+            <label htmlFor="json-input" className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               JSON Input
             </label>
             <select
@@ -96,7 +95,7 @@ export default function Home() {
                 }
                 e.target.value = ''
               }}
-              className="text-xs bg-transparent text-blue-400 hover:text-blue-300 cursor-pointer focus:outline-none"
+              className="text-xs bg-transparent text-blue-400 hover:text-blue-300 cursor-pointer focus:outline-none transition-colors"
               aria-label="Load example"
             >
               <option value="" disabled>Load example…</option>
@@ -121,25 +120,17 @@ export default function Home() {
             placeholder={`{\n  "name": "root",\n  "type": "folder",\n  "children": []\n}`}
             rows={14}
             spellCheck={false}
-            className="w-full bg-gray-950 border border-gray-700 rounded-lg p-3 text-sm text-gray-200 font-mono resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent placeholder-gray-600"
+            className="input-field w-full p-3.5 text-sm font-mono resize-y leading-relaxed"
           />
 
           {error && (
-            <div className="flex items-start gap-2 p-3 bg-red-900/20 border border-red-800/50 rounded-lg">
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                className="text-red-400 shrink-0 mt-0.5"
-              >
+            <div className="flex items-start gap-3 px-4 py-3 bg-red-500/8 border border-red-500/20 rounded-xl animate-fade-in">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 shrink-0 mt-0.5">
                 <circle cx="12" cy="12" r="10" />
                 <line x1="12" y1="8" x2="12" y2="12" />
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
-              <p className="text-sm text-red-300">{error}</p>
+              <p className="text-sm text-red-300/90">{error}</p>
             </div>
           )}
 
@@ -148,13 +139,12 @@ export default function Home() {
               type="button"
               onClick={handleLoad}
               disabled={!jsonInput.trim()}
-              className="flex-1 py-2.5 px-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-40 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
+              className="btn-primary flex-1 py-2.5 px-4 text-sm"
             >
               Visualize Tree
             </button>
-
-            <label className="py-2.5 px-4 bg-gray-800 hover:bg-gray-700 text-gray-300 text-sm font-medium rounded-lg transition-colors border border-gray-700 whitespace-nowrap cursor-pointer">
-              Upload JSON
+            <label className="btn-secondary py-2.5 px-4 text-sm whitespace-nowrap cursor-pointer">
+              Upload JSON{' '}
               <input
                 type="file"
                 accept=".json,application/json"
@@ -165,14 +155,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-5 p-4 bg-gray-900/40 border border-gray-800 rounded-lg">
-          <p className="text-xs text-gray-500 font-medium mb-2 uppercase tracking-wide">
+        {/* ── Format hint ──────────────────────────────── */}
+        <div className="mt-4 px-4 py-3.5 rounded-xl border border-white/[0.05] bg-white/[0.02]">
+          <p className="text-[10px] font-semibold text-gray-600 uppercase tracking-widest mb-2">
             Expected format
           </p>
-          <pre className="text-xs text-gray-500 font-mono leading-relaxed overflow-x-auto">
+          <pre className="text-xs text-gray-600 font-mono leading-relaxed overflow-x-auto">
             {`{ "name": "root", "type": "folder", "children": [\n    { "name": "app.ts", "type": "file", "size": 2048 }\n  ]\n}`}
           </pre>
         </div>
+
       </div>
     </Layout>
   )

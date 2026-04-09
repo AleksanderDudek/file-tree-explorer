@@ -1,37 +1,29 @@
 import { Link } from 'react-router-dom'
 
 interface BreadcrumbProps {
-  pathParts: string[]
+  readonly pathParts: string[]
 }
 
 export default function Breadcrumb({ pathParts }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-sm text-gray-400 flex-wrap">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-0.5 flex-wrap">
       {pathParts.map((part, index) => {
         const isLast = index === pathParts.length - 1
         const href = `/tree/${pathParts.slice(0, index + 1).join('/')}`
 
         return (
-          <span key={href} className="flex items-center gap-1">
+          <span key={href} className="flex items-center gap-0.5">
             {index > 0 && (
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                className="text-gray-600 shrink-0"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
+              <span className="text-gray-700 px-0.5 select-none text-sm">/</span>
             )}
             {isLast ? (
-              <span className="text-gray-100 font-medium">{part}</span>
+              <span className="text-[13px] font-medium text-gray-200 px-1.5 py-0.5 bg-white/[0.05] rounded-md border border-white/[0.06]">
+                {part}
+              </span>
             ) : (
               <Link
                 to={href}
-                className="hover:text-gray-100 transition-colors"
+                className="text-[13px] text-gray-600 hover:text-gray-300 px-1.5 py-0.5 rounded-md hover:bg-white/[0.04] transition-all duration-100"
               >
                 {part}
               </Link>
