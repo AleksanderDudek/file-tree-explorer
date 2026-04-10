@@ -36,6 +36,8 @@ const en = {
     clearSearch: 'Clear search',
     noResults: 'No results for "{{query}}"',
     results_one: '{{count}} result',
+    results_few: '{{count}} results',
+    results_many: '{{count}} results',
     results_other: '{{count}} results',
   },
   treeNode: {
@@ -60,6 +62,8 @@ const en = {
     },
     contents: 'Contents',
     items_one: '{{count}} item',
+    items_few: '{{count}} items',
+    items_many: '{{count}} items',
     items_other: '{{count}} items',
     notFound: 'Node not found',
     backToTree: '← Back to tree',
