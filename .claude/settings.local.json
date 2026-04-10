@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\(p.version, Object.keys\\(p.dependencies\\).join\\(', '\\)\\)\")",
+      "Bash(git -C /Users/pl2mac0030/file-tree-explorer remote get-url origin)"
     ]
   }
 }
