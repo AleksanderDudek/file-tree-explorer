@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Languages } from 'lucide-react'
 import { SUPPORTED_LANGUAGES } from '../../i18n/index'
 
 export default function LanguageSwitcher() {
@@ -7,6 +8,7 @@ export default function LanguageSwitcher() {
 
   return (
     <div className="flex items-center gap-0.5 border border-white/[0.08] rounded-lg p-0.5">
+      <Languages size={11} className="text-gray-600 mx-1 shrink-0" />
       {SUPPORTED_LANGUAGES.map(({ code, label }) => (
         <button
           key={code}

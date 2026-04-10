@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import {
+  Upload, Play, CheckCircle, AlertCircle, FolderTree,
+  Search, GitBranch, Zap,
+} from 'lucide-react'
 import { useTree } from '../../context/TreeContext'
 import Layout from '../../components/Layout/Layout'
 import { EXAMPLES } from './Home.consts'
@@ -54,27 +58,45 @@ export default function Home() {
         <div className="mb-10 text-center relative">
           <div className="bg-hero-glow absolute inset-x-0 -top-16 h-80 pointer-events-none" />
 
-          <div className="inline-flex items-center gap-2 text-xs font-medium text-blue-400/90 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse-slow" />{' '}
-            {t('home.badge')}
+          {/* Floating icon */}
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 mb-6 animate-float shadow-glow-blue-sm">
+            <FolderTree size={28} className="text-blue-400" />
           </div>
 
-          <h1 className="text-gradient text-4xl font-bold tracking-tight mb-3">
+          {/* Badge */}
+          <div className="flex justify-center mb-5">
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-blue-400/90 bg-blue-500/10 border border-blue-500/20 rounded-full px-3 py-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse-slow shrink-0" />{' '}
+              {t('home.badge')}
+            </div>
+          </div>
+
+          <h1 className="text-shimmer text-4xl font-bold tracking-tight mb-3">
             {t('home.title')}
           </h1>
           <p className="text-gray-500 text-[15px] leading-relaxed whitespace-pre-line">
             {t('home.subtitle')}
           </p>
+
+          {/* Feature pills */}
+          <div className="flex items-center justify-center gap-2 mt-5 flex-wrap">
+            {[
+              { icon: Search,    label: 'Search nodes' },
+              { icon: GitBranch, label: 'Visual tree' },
+              { icon: Zap,       label: 'Instant parse' },
+            ].map(({ icon: Icon, label }) => (
+              <span key={label} className="inline-flex items-center gap-1.5 text-[11px] text-gray-600 bg-white/[0.03] border border-white/[0.06] rounded-full px-2.5 py-1">
+                <Icon size={10} className="text-gray-600" />
+                {label}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* ── Tree already loaded banner ────────────────── */}
         {tree && (
           <div className="mb-5 flex items-center gap-3 px-4 py-3 bg-emerald-500/8 border border-emerald-500/20 rounded-xl animate-fade-in">
-            <div className="shrink-0 flex items-center justify-center w-6 h-6 rounded-full bg-emerald-500/20">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-emerald-400">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
+            <CheckCircle size={16} className="text-emerald-400 shrink-0" />
             <p className="text-sm text-emerald-300/90 flex-1">{t('home.treeLoaded')}</p>
             <Link
               to="/tree"
@@ -86,7 +108,7 @@ export default function Home() {
         )}
 
         {/* ── Main card ────────────────────────────────── */}
-        <div className="card p-6 space-y-4">
+        <div className="card p-6 space-y-4 card-hover">
           <div className="flex items-center justify-between">
             <label htmlFor="json-input" className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
               {t('home.jsonInput.label')}
@@ -131,11 +153,7 @@ export default function Home() {
 
           {error && (
             <div className="flex items-start gap-3 px-4 py-3 bg-red-500/8 border border-red-500/20 rounded-xl animate-fade-in">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-red-400 shrink-0 mt-0.5">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg>
+              <AlertCircle size={15} className="text-red-400 shrink-0 mt-0.5" />
               <p className="text-sm text-red-300/90">{error}</p>
             </div>
           )}
@@ -145,11 +163,13 @@ export default function Home() {
               type="button"
               onClick={handleLoad}
               disabled={!jsonInput.trim()}
-              className="btn-primary flex-1 py-2.5 px-4 text-sm"
+              className="btn-primary flex-1 py-2.5 px-4 text-sm flex items-center justify-center gap-2"
             >
+              <Play size={13} className="shrink-0" />
               {t('home.visualizeTree')}
             </button>
-            <label className="btn-secondary py-2.5 px-4 text-sm whitespace-nowrap cursor-pointer">
+            <label className="btn-secondary py-2.5 px-4 text-sm whitespace-nowrap cursor-pointer flex items-center gap-2">
+              <Upload size={13} className="shrink-0" />
               {t('home.uploadJson')}{' '}
               <input
                 type="file"

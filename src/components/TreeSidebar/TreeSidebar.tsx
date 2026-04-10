@@ -1,7 +1,9 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { Search, X, Folder } from 'lucide-react'
 import { useTree } from '../../context/TreeContext'
 import { searchNodes } from '../../utils/treeUtils'
+import { getFileIcon } from '../../utils/fileIcons'
 import TreeNodeItem from '../TreeNodeItem/TreeNodeItem'
 import type { SearchResult } from '../../types/tree'
 
@@ -34,18 +36,7 @@ export default function TreeSidebar() {
         {/* Search */}
         <div className="p-2.5 border-b border-white/[0.06]">
           <div className="relative">
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
+            <Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none" />
             <input
               type="text"
               value={query}
@@ -59,10 +50,7 @@ export default function TreeSidebar() {
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-300 transition-colors"
                 aria-label={t('sidebar.clearSearch')}
               >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
+                <X size={12} />
               </button>
             )}
           </div>
@@ -88,10 +76,7 @@ function SearchResults({ results, query }: { readonly results: SearchResult[]; r
   if (results.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-8 text-center">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-700 mb-2">
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
-        </svg>
+        <Search size={28} className="text-gray-700 mb-2" />
         <p className="text-xs text-gray-600">{t('sidebar.noResults', { query })}</p>
       </div>
     )
@@ -102,30 +87,25 @@ function SearchResults({ results, query }: { readonly results: SearchResult[]; r
       <p className="text-[10px] font-semibold text-gray-700 uppercase tracking-wider px-2 py-1">
         {t('sidebar.results', { count: results.length })}
       </p>
-      {results.map((result) => (
-        <Link
-          key={result.path}
-          to={`/tree/${result.path}`}
-          className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm hover:bg-white/[0.05] transition-all duration-100 group"
-        >
-          {result.node.type === 'file' ? (
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400/80 shrink-0">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-amber-600/70 shrink-0">
-              <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            </svg>
-          )}
-          <div className="min-w-0">
-            <p className="text-[13px] text-gray-300 group-hover:text-white truncate transition-colors">
-              {result.node.name}
-            </p>
-            <p className="text-[11px] text-gray-700 truncate font-mono">{result.path}</p>
-          </div>
-        </Link>
-      ))}
+      {results.map((result) => {
+        const isFile = result.node.type === 'file'
+        const { Icon, className: iconColor } = isFile ? getFileIcon(result.node.name) : { Icon: Folder, className: 'text-amber-600/70' }
+        return (
+          <Link
+            key={result.path}
+            to={`/tree/${result.path}`}
+            className="flex items-center gap-2.5 px-2 py-1.5 rounded-md text-sm hover:bg-white/[0.05] transition-all duration-100 group"
+          >
+            <Icon size={isFile ? 13 : 14} className={`${iconColor} shrink-0`} />
+            <div className="min-w-0">
+              <p className="text-[13px] text-gray-300 group-hover:text-white truncate transition-colors">
+                {result.node.name}
+              </p>
+              <p className="text-[11px] text-gray-700 truncate font-mono">{result.path}</p>
+            </div>
+          </Link>
+        )
+      })}
     </div>
   )
 }

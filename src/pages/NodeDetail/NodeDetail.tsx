@@ -1,8 +1,12 @@
 import { useParams, Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import {
+  Folder, FolderOpen, ChevronRight, AlertCircle, ArrowLeft,
+} from 'lucide-react'
 import { useTree } from '../../context/TreeContext'
 import { findNodeByPath, getTotalSize, sortNodes } from '../../utils/treeUtils'
 import { formatSize } from '../../utils/formatters'
+import { getFileIcon } from '../../utils/fileIcons'
 import Breadcrumb from '../../components/Breadcrumb/Breadcrumb'
 import type { TreeNode } from '../../types/tree'
 
@@ -36,14 +40,12 @@ export default function NodeDetail() {
 
 function FileDetail({ node, path }: { readonly node: Extract<TreeNode, { type: 'file' }>; readonly path: string }) {
   const { t } = useTranslation()
+  const { Icon, className: iconColor } = getFileIcon(node.name)
   return (
-    <div className="card overflow-hidden">
+    <div className="card overflow-hidden card-hover">
       <div className="px-5 py-4 border-b border-white/[0.06] flex items-center gap-3">
-        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-500/15 border border-blue-500/25 shrink-0">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-            <polyline points="14 2 14 8 20 8" />
-          </svg>
+        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 shrink-0">
+          <Icon size={16} className={iconColor} />
         </div>
         <h1 className="text-base font-semibold text-gray-100 break-all flex-1">{node.name}</h1>
         <span className="text-[11px] font-medium text-blue-400/80 bg-blue-500/10 border border-blue-500/20 px-2 py-0.5 rounded-full">
@@ -66,12 +68,10 @@ function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type:
 
   return (
     <div className="space-y-4">
-      <div className="card overflow-hidden">
+      <div className="card overflow-hidden card-hover">
         <div className="px-5 py-4 border-b border-white/[0.06] flex items-center gap-3">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-500/25 shrink-0">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" className="text-amber-400">
-              <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-            </svg>
+          <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 shrink-0">
+            <FolderOpen size={16} className="text-amber-400" />
           </div>
           <h1 className="text-base font-semibold text-gray-100 break-all flex-1">{node.name}</h1>
           <span className="text-[11px] font-medium text-amber-400/80 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
@@ -99,20 +99,18 @@ function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type:
               .map((child) => {
                 const childPath = `${path}/${child.name}`
                 return (
-                  <li key={child.name} className="border-b border-white/[0.04] last:border-0">
+                  <li key={child.name} className="border-b border-white/[0.04] last:border-0 stagger-item">
                     <Link
                       to={`/tree/${childPath}`}
-                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/[0.03] transition-colors duration-100 group"
+                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/[0.04] transition-all duration-100 group"
                     >
                       {child.type === 'file' ? (
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-400/70 shrink-0">
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                        </svg>
+                        (() => {
+                          const { Icon, className: c } = getFileIcon(child.name)
+                          return <Icon size={13} className={`shrink-0 ${c} opacity-80`} />
+                        })()
                       ) : (
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" className="text-amber-500/60 shrink-0">
-                          <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        </svg>
+                        <Folder size={14} className="text-amber-500/60 shrink-0 group-hover:text-amber-400 transition-colors" />
                       )}
                       <span className="text-sm text-gray-400 group-hover:text-gray-100 transition-colors flex-1 truncate">
                         {child.name}
@@ -127,9 +125,7 @@ function FolderDetail({ node, path }: { readonly node: Extract<TreeNode, { type:
                           {t('nodeDetail.items', { count: child.children.length })}
                         </span>
                       )}
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-gray-700 group-hover:text-gray-500 transition-colors shrink-0">
-                        <path d="m9 18 6-6-6-6" />
-                      </svg>
+                      <ChevronRight size={12} className="text-gray-700 group-hover:text-gray-500 transition-colors shrink-0" />
                     </Link>
                   </li>
                 )
@@ -156,19 +152,16 @@ function NotFound({ path }: { readonly path: string }) {
   const { t } = useTranslation()
   return (
     <div className="flex flex-col items-center justify-center pt-20 text-center animate-fade-in">
-      <div className="flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/[0.06] mb-5">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-600">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="12" y1="8" x2="12" y2="12" />
-          <line x1="12" y1="16" x2="12.01" y2="16" />
-        </svg>
+      <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/[0.06] mb-5 shadow-card">
+        <AlertCircle size={28} className="text-gray-600" />
       </div>
       <p className="text-gray-400 font-medium mb-1">{t('nodeDetail.notFound')}</p>
-      {path && <p className="text-xs text-gray-700 font-mono mb-5 max-w-xs truncate">{path}</p>}
+      {path && <p className="text-xs text-gray-700 font-mono mb-6 max-w-xs truncate">{path}</p>}
       <Link
         to="/tree"
-        className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors"
       >
+        <ArrowLeft size={14} />
         {t('nodeDetail.backToTree')}
       </Link>
     </div>
